@@ -4,15 +4,16 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+//BURASI DÜZENLENECEK!!!!
 
-public class MigrosScraper implements Runnable {
+public class SokScraper implements Runnable {
     private String baseUrl;
     private ProductRepository productRepository;
 
-    public MigrosScraper(String baseUrl, ProductRepository productRepository) {
+    public SokScraper(String baseUrl, ProductRepository productRepository) {
         this.baseUrl = baseUrl;
         this.productRepository = productRepository;
-        System.out.println("MigrosScraper initialized with base URL: " + baseUrl);
+        System.out.println("SokScraper initialized with base URL: " + baseUrl);
     }
 
     @Override
@@ -35,7 +36,7 @@ public class MigrosScraper implements Runnable {
                 for (int i = 0; i < productNames.size(); i++) {
                     Element name = productNames.get(i);
                     Element price = productPrices.get(i);
-                    System.out.println("Migros Market - Product: " + name.text() + " - Price: " + price.text());
+                    System.out.println("Sok Market - Product: " + name.text() + " - Price: " + price.text());
 
                     // MongoDB'ye kaydet
                     Product product = new Product(name.text(), price.text());
