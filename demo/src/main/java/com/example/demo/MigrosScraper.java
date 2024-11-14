@@ -24,8 +24,8 @@ public class MigrosScraper implements Runnable {
                 Document doc = Jsoup.connect(url).get();
                 System.out.println("Document fetched successfully for page: " + page);
 
-                Elements productNames = doc.select("h2.CProductCard-module_title__u8bMW");
-                Elements productPrices = doc.select("span.CPriceBox-module_price__bYk-c");
+                Elements productNames = doc.select("mat-caption text-color-black product-name");
+                Elements productPrices = doc.select("price subtitle-1 ng-star-inserted");
 
                 if (productNames.isEmpty() && productPrices.isEmpty()) {
                     System.out.println("No more products found. Stopping the scraper.");

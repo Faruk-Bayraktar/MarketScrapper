@@ -25,8 +25,8 @@ public class A101Scraper implements Runnable {
                 Document doc = Jsoup.connect(url).get();
                 System.out.println("Document fetched successfully for page: " + page);
 
-                Elements productNames = doc.select("h2.CProductCard-module_title__u8bMW");
-                Elements productPrices = doc.select("span.CPriceBox-module_price__bYk-c");
+                Elements productNames = doc.select("mobile:text-xs tablet:text-xs line-clamp-3 h-12 font-medium overflow-hidden mb-[10px]");
+                Elements productPrices = doc.select("text-md absolute bottom-0 font-medium tablet:text-base text-[#333]");
 
                 if (productNames.isEmpty() && productPrices.isEmpty()) {
                     System.out.println("No more products found. Stopping the scraper.");
