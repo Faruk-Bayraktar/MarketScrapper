@@ -1,12 +1,13 @@
 package com.example.demo;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-
 public class MigrosScraper implements Runnable {
-    private final String baseUrl="https://www.migros.com.tr/meyve-sebze-c-2?sayfa=1&sirala=onerilenler";
+
+    private final String baseUrl = "https://www.migros.com.tr/meyve-sebze-c-2?sayfa=1&sirala=onerilenler";
     private final ProductRepository productRepository;
 
     public MigrosScraper(ProductRepository productRepository) {

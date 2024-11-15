@@ -1,4 +1,5 @@
 package com.example.demo;
+
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -6,9 +7,10 @@ import org.jsoup.select.Elements;
 
 //BURASI DÜZENLENECEK!!!!
 public class SokScraper implements Runnable {
+
     private final String baseUrl = "https://www.sokmarket.com.tr/meyve-ve-sebze-c-20";
     private final ProductRepository productRepository;
-    
+
     public SokScraper(ProductRepository productRepository) {
         this.productRepository = productRepository;
         System.out.println("SokScraper initialized with base URL: " + baseUrl);
