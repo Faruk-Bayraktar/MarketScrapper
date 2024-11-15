@@ -6,11 +6,10 @@ import org.jsoup.select.Elements;
 
 
 public class MigrosScraper implements Runnable {
-    private String baseUrl;
-    private ProductRepository productRepository;
+    private final String baseUrl="https://www.migros.com.tr/meyve-sebze-c-2?sayfa=1&sirala=onerilenler";
+    private final ProductRepository productRepository;
 
-    public MigrosScraper(String baseUrl, ProductRepository productRepository) {
-        this.baseUrl = baseUrl;
+    public MigrosScraper(ProductRepository productRepository) {
         this.productRepository = productRepository;
         System.out.println("MigrosScraper initialized with base URL: " + baseUrl);
     }
@@ -20,7 +19,7 @@ public class MigrosScraper implements Runnable {
         int page = 1;
         while (true) {
             try {
-                String url = baseUrl + "?page=" + page;
+                String url = baseUrl + page + "&sirala=onerilenler";
                 Document doc = Jsoup.connect(url).get();
                 System.out.println("Document fetched successfully for page: " + page);
 
