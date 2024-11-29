@@ -19,7 +19,7 @@ public class MarketScrappingApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         // SokScraper sokScraper = new SokScraper(productRepository);
         // Thread sokThread = new Thread(sokScraper);
-        // sokThread.start();  
+        // sokThread.start();
         // System.out.println("Sok Scraper started");
 
         A101Scraper a101scraper = new A101Scraper();
