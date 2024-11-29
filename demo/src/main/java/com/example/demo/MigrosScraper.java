@@ -1,52 +1,90 @@
 package com.example.demo;
 
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
-import org.jsoup.nodes.Element;
-import org.jsoup.select.Elements;
+import java.util.ArrayList;
+import java.util.List;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+
+import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class MigrosScraper implements Runnable {
 
-    private final String baseUrl = "https://www.migros.com.tr/meyve-sebze-c-2?sayfa=1&sirala=onerilenler";
-    private final ProductRepository productRepository;
-
-    public MigrosScraper(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-        System.out.println("MigrosScraper initialized with base URL: " + baseUrl);
-    }
+    private final String baseUrl = "https://www.migros.com.tr/hemen/";
 
     @Override
     public void run() {
-        int page = 1;
-        while (true) {
-            try {
-                String url = baseUrl + page + "&sirala=onerilenler";
-                Document doc = Jsoup.connect(url).get();
-                System.out.println("Document fetched successfully for page: " + page);
+        // Selenium WebDriver'ı başlat
+        WebDriverManager.chromedriver().setup(); // Doğru sürücüyü otomatik bulur ve yükler
+        WebDriver driver = new ChromeDriver();
+        try {
+            // Sayfayı aç
+            driver.get(baseUrl);
 
-                Elements productNames = doc.select("mat-caption text-color-black product-name");
-                Elements productPrices = doc.select("price subtitle-1 ng-star-inserted");
+            // Bir süre bekle (JavaScript yüklemesi için)
+            Thread.sleep(5000); // Gerekirse süreyi artırabilirsiniz
 
-                if (productNames.isEmpty() && productPrices.isEmpty()) {
-                    System.out.println("No more products found. Stopping the scraper.");
-                    break;
+            // Kategorileri içeren elemanları seç
+            List<WebElement> categoryElements = driver.findElements(By.cssSelector("div.category-wrapper.ng-star-inserted"));
+
+            // ID'lerin son kısımlarını saklamak için bir liste oluştur
+            List<String> idSuffixes = new ArrayList<>();
+
+            for (WebElement categoryElement : categoryElements) {
+                // Altındaki a etiketlerini seç
+                List<WebElement> linkElements = categoryElement.findElements(By.cssSelector("a[id^='home-page-category-card-']"));
+
+                for (WebElement linkElement : linkElements) {
+                    // ID değerini al
+                    String idValue = linkElement.getAttribute("id");
+
+                    // ID değerinin son kısmını ve bir önceki kelimeyi ayıkla
+                    String idSuffix = idValue.substring(idValue.lastIndexOf("card-") + 5);
+
+                    // Listeye ekle
+                    idSuffixes.add(idSuffix);
                 }
-
-                for (int i = 0; i < productNames.size(); i++) {
-                    Element name = productNames.get(i);
-                    Element price = productPrices.get(i);
-                    System.out.println("Migros Market - Product: " + name.text() + " - Price: " + price.text());
-
-                    // MongoDB'ye kaydet
-                    Product product = new Product(name.text(), price.text());
-                    productRepository.save(product);
-                }
-
-                page++;
-            } catch (Exception e) {
-                e.printStackTrace();
-                break;
             }
+
+            // İlk elemanı atla
+            if (!idSuffixes.isEmpty()) {
+                idSuffixes.remove(0);
+            }
+
+            // Her bir idSuffix için işlemleri gerçekleştir
+            for (String idSuffix : idSuffixes) {
+                int pageNumber = 1;
+                boolean hasMorePages = true;
+
+                while (hasMorePages) {
+                    String categoryUrl = baseUrl + idSuffix + "?sayfa=" + pageNumber + "&sirala=onerilenler";
+                    driver.get(categoryUrl);
+
+                    // Bir süre bekle (JavaScript yüklemesi için)
+                    Thread.sleep(5000); // Gerekirse süreyi artırabilirsiniz
+
+                    // Ürün isimlerini içeren elemanları seç
+                    List<WebElement> productElements = driver.findElements(By.cssSelector("a.mat-caption.text-color-black.product-name"));
+
+                    if (productElements.isEmpty()) {
+                        hasMorePages = false;
+                    } else {
+                        // Ürün isimlerini yazdır
+                        for (WebElement productElement : productElements) {
+                            System.out.println(idSuffix + " : " + productElement.getText());
+                        }
+                        pageNumber++;
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // Tarayıcıyı kapat
+            driver.quit();
         }
     }
+
 }

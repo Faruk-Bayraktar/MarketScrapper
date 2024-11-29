@@ -22,14 +22,13 @@ public class MarketScrappingApplication implements CommandLineRunner {
         // sokThread.start();
         // System.out.println("Sok Scraper started");
 
-        A101Scraper a101scraper = new A101Scraper();
-        Thread a101Thread = new Thread(a101scraper);
-        a101Thread.start();
-        System.out.println("a101 Scraper started");
-
-        // MigrosScraper migrosScraper = new MigrosScraper(productRepository);
-        // Thread migrosThread = new Thread(migrosScraper);
-        // migrosThread.start();
-        // System.out.println("Mgiros Scraper started");
+        // A101Scraper a101scraper = new A101Scraper();
+        // Thread a101Thread = new Thread(a101scraper);
+        // a101Thread.start();
+        // System.out.println("a101 Scraper started");
+        MigrosScraper migrosScraper = new MigrosScraper();
+        Thread migrosThread = new Thread(migrosScraper);
+        migrosThread.start();
+        System.out.println("Migros Scraper started");
     }
 }
