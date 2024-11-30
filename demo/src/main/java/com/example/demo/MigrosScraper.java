@@ -1,4 +1,5 @@
 package com.example.demo;
+//finito
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,16 +65,19 @@ public class MigrosScraper implements Runnable {
 
                     // Bir süre bekle (JavaScript yüklemesi için)
                     Thread.sleep(5000); // Gerekirse süreyi artırabilirsiniz
-
                     // Ürün isimlerini içeren elemanları seç
                     List<WebElement> productElements = driver.findElements(By.cssSelector("a.mat-caption.text-color-black.product-name"));
+                    // Ürün fiyatlarını içeren elemanları seç
+                    List<WebElement> priceElements = driver.findElements(By.cssSelector("div.price.subtitle-1.ng-star-inserted"));
 
                     if (productElements.isEmpty()) {
                         hasMorePages = false;
                     } else {
-                        // Ürün isimlerini yazdır
-                        for (WebElement productElement : productElements) {
-                            System.out.println(idSuffix + " : " + productElement.getText());
+                        // Ürün isimlerini ve fiyatlarını yazdır
+                        for (int i = 0; i < productElements.size(); i++) {
+                            String productName = productElements.get(i).getText();
+                            String productPrice = priceElements.get(i).getText();
+                            System.out.println("Product: " + productName + " - Price: " + productPrice);
                         }
                         pageNumber++;
                     }

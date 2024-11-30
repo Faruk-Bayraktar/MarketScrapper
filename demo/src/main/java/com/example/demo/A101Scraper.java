@@ -1,5 +1,7 @@
 package com.example.demo;
+//FINITO
 
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -7,6 +9,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
@@ -38,12 +42,42 @@ public class A101Scraper implements Runnable {
 
                 // Listeye ekle
                 hrefList.add(hrefValue);
-                System.out.println(hrefValue); // Konsola yazdır
             }
+            // İlk elemanı atla
+            if (!hrefList.isEmpty()) {
+                hrefList = hrefList.subList(4, hrefList.size());
+            }
+            System.out.println(hrefList); // Konsola yazdır
 
-            // Href değerlerini işlem yapacağınız şekilde kullanabilirsiniz
-            System.out.println("Toplam href sayısı: " + hrefList.size());
+            for (String href : hrefList) {
+                // Her bir linke git
+                driver.get(href);
 
+                // Sayfanın tamamen yüklendiğinden emin olmak için bekle
+                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+                List<WebElement> productContainers = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("div.h-\\[96px\\].flex.pt-1.flex-col")));
+
+                for (WebElement productContainer : productContainers) {
+                    // Ürün ismini çek
+                    WebElement productNameElement = productContainer.findElement(By.cssSelector("div.mobile\\:text-xs.tablet\\:text-xs.line-clamp-3.h-12.font-medium.overflow-hidden.mb-\\[10px\\]"));
+                    String productName = productNameElement.getText();
+
+                    // Fiyatı çek
+                    WebElement priceContainer = productContainer.findElement(By.cssSelector("div.h-\\[39px\\].w-full.relative"));
+                    String price;
+                    if (!priceContainer.findElements(By.cssSelector("div.text-md.absolute.bottom-0.font-medium.tablet\\:text-base.text-\\[\\#EA242A\\]")).isEmpty()) {
+                        price = priceContainer.findElement(By.cssSelector("div.text-md.absolute.bottom-0.font-medium.tablet\\:text-base.text-\\[\\#EA242A\\]")).getText();
+                        System.out.println("Ürün İsmi: " + productName + " - İndirimli Fiyat: " + price);
+                    } else if (!priceContainer.findElements(By.cssSelector("div.text-md.absolute.bottom-0.font-medium.tablet\\:text-base.text-\\[\\#333\\]")).isEmpty()) {
+                        price = priceContainer.findElement(By.cssSelector("div.text-md.absolute.bottom-0.font-medium.tablet\\:text-base.text-\\[\\#333\\]")).getText();
+                        System.out.println("Ürün İsmi: " + productName + " - Normal Fiyat: " + price);
+                    } else {
+                        System.out.println("Ürün İsmi: " + productName + " - Fiyat bulunamadı");
+                    }
+                }
+
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
