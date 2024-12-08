@@ -1,5 +1,4 @@
 package com.example.demo;
-//finito
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,10 +7,20 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.example.demo.repository.MigrosDataRepository;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class MigrosScraper implements Runnable {
+
+    private final MigrosDataRepository migrosDataRepository;
+
+    @Autowired
+    public MigrosScraper(MigrosDataRepository migrosDataRepository) {
+        this.migrosDataRepository = migrosDataRepository;
+    }
 
     private final String baseUrl = "https://www.migros.com.tr/hemen/";
 
@@ -77,7 +86,13 @@ public class MigrosScraper implements Runnable {
                         for (int i = 0; i < productElements.size(); i++) {
                             String productName = productElements.get(i).getText();
                             String productPrice = priceElements.get(i).getText();
-                            System.out.println("Product: " + productName + " - Price: " + productPrice);
+                            boolean discount = false; // İndirim bilgisi ekleyin veya çıkarın
+
+                            // Ürünü kaydet
+                            MigrosProduct product = new MigrosProduct(productName, productPrice, discount);
+                            migrosDataRepository.save(product);
+                            System.out.println("Saving product: " + product);
+
                         }
                         pageNumber++;
                     }

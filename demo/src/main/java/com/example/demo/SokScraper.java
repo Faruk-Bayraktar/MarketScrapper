@@ -7,13 +7,21 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.example.demo.repository.SokDataRepository;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 
-//BURASI DÜZENLENECEK!!!!
 public class SokScraper implements Runnable {
 
     private final String baseUrl = "https://www.sokmarket.com.tr/";
+    private final SokDataRepository sokDataRepository;
+
+    @Autowired
+    public SokScraper(SokDataRepository sokDataRepository) {
+        this.sokDataRepository = sokDataRepository;
+    }
 
     @Override
     public void run() {
@@ -27,23 +35,31 @@ public class SokScraper implements Runnable {
             // Bir süre bekle (JavaScript yüklemesi için)
             Thread.sleep(3000); // Gerekirse süreyi artırabilirsiniz
             // Belirtilen div altındaki tüm a etiketlerini bul
-            // Belirtilen div altındaki tüm a etiketlerini bul
-            List<WebElement> links = driver.findElements(By.cssSelector(".CategoryList_categories__wmXtl a"));
+            List<WebElement> links = driver.findElements(By.cssSelector(".CategoryList_categories__wmXtl.CategoryList_isMegaMenu__iH1P5 a"));
             List<String> hrefs = new ArrayList<>();
             for (WebElement link : links) {
                 // Her bir a etiketinin href özniteliğini listeye ekle
                 hrefs.add(link.getAttribute("href"));
             }
-            if (!hrefs.isEmpty()) {
-                // İlk 3 elemanı çıkar
+            // İlk 3 elemanı ve sondan bir önceki elemanı çıkart
+            if (hrefs.size() > 3) {
                 hrefs = hrefs.subList(3, hrefs.size());
-                // Sonuncu elemanı çıkar
-                if (!hrefs.isEmpty()) {
-                    hrefs = hrefs.subList(0, hrefs.size() - 1);
-                }
+            }
+            // Sonuncu elemanı çıkart
+            if (!hrefs.isEmpty()) {
+                hrefs.remove(hrefs.size() - 1);
+            }
+            // Belirtilen URL'yi güncelle
+            String oldUrl = "https://www.sokmarket.com.tr/giyim-ve-ayakkabi-ve-aksesuar-c-20886";
+            String newUrl = "https://www.sokmarket.com.tr/giyim-ayakkabi-ve-aksesuar-c-20886";
+
+            if (hrefs.contains(oldUrl)) {
+                // URL'yi güncelle
+                int index = hrefs.indexOf(oldUrl);
+                hrefs.set(index, newUrl);
             }
             System.out.println(hrefs);
-
+            System.out.println(hrefs.size());
             for (String href : hrefs) {
                 int page = 1;
                 boolean hasNextPage = true;
@@ -68,16 +84,22 @@ public class SokScraper implements Runnable {
                             // Fiyatı al
                             WebElement priceElement;
                             String price;
-                            if (product.findElements(By.cssSelector(".CPriceBox-module_discountedPrice__15Ffw")).size() > 0) {
+                            boolean discount = false;
+                            if (!product.findElements(By.cssSelector(".CPriceBox-module_discountedPrice__15Ffw")).isEmpty()) {
                                 priceElement = product.findElement(By.cssSelector(".CPriceBox-module_discountedPrice__15Ffw"));
                                 price = "Discounted Price: " + priceElement.getText();
-                            } else if (product.findElements(By.cssSelector(".CPriceBox-module_price__bYk-c")).size() > 0) {
+                                discount = true;
+                            } else if (!product.findElements(By.cssSelector(".CPriceBox-module_price__bYk-c")).isEmpty()) {
                                 priceElement = product.findElement(By.cssSelector(".CPriceBox-module_price__bYk-c"));
                                 price = "Normal Price: " + priceElement.getText();
                             } else {
                                 price = "Price not found";
                             }
-                            System.out.println(price);
+                            // Ürünü kaydet
+                            SokProduct productEntity = new SokProduct(productName, price, discount);
+                            sokDataRepository.save(productEntity);
+                            System.out.println("Saving product: " + productEntity);
+
                         }
                         page++;
                     }
