@@ -87,6 +87,7 @@ package com.example.demo;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -135,7 +136,6 @@ public class A101Scraper implements Runnable {
             if (!hrefList.isEmpty()) {
                 hrefList = hrefList.subList(4, hrefList.size());
             }
-            System.out.println(hrefList); // Konsola yazdır
 
             for (String href : hrefList) {
                 driver.get(href);
@@ -153,10 +153,9 @@ public class A101Scraper implements Runnable {
                 }
                 for (WebElement productContainer : filteredProductContainers) {
                     // Ürün ismini çek
+                    // Ürün ismini çek
                     WebElement productNameElement = productContainer.findElement(By.cssSelector("div.mobile\\:text-xs.tablet\\:text-xs.line-clamp-3.h-12.font-medium.overflow-hidden.mb-\\[10px\\]"));
                     String productName = productNameElement.getText();
-
-                    // Fiyatı çek
                     WebElement priceContainer = productContainer.findElement(By.cssSelector("div.h-\\[39px\\].w-full.relative"));
                     String price;
                     boolean discount = false;
@@ -172,10 +171,20 @@ public class A101Scraper implements Runnable {
                         continue;
                     }
 
-                    // Ürünü kaydet
-                    A101Product product = new A101Product(productName, price, discount);
-                    a101DataRepository.save(product);
-                    System.out.println("Saving product: " + product);
+                    String productId = productName.toLowerCase().replaceAll("\\s+", "-");
+
+                    Optional<A101Product> existingProductOpt = a101DataRepository.findById(productId);
+                    if (existingProductOpt.isPresent()) {
+                        A101Product existingProduct = existingProductOpt.get();
+                        existingProduct.setPrice(price);
+                        existingProduct.setDiscount(discount);
+                        a101DataRepository.save(existingProduct);
+                        System.out.println("Updating product: " + existingProduct);
+                    } else {
+                        A101Product product = new A101Product(productId, productName, price, discount);
+                        a101DataRepository.save(product);
+                        System.out.println("Saving new product: " + product);
+                    }
                 }
             }
         } catch (Exception e) {

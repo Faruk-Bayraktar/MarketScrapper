@@ -2,6 +2,7 @@ package com.example.demo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -58,16 +59,14 @@ public class SokScraper implements Runnable {
                 int index = hrefs.indexOf(oldUrl);
                 hrefs.set(index, newUrl);
             }
-            System.out.println(hrefs);
-            System.out.println(hrefs.size());
             for (String href : hrefs) {
                 int page = 1;
                 boolean hasNextPage = true;
+
                 while (hasNextPage) {
                     String fullUrl = href + "?page=" + page;
                     driver.get(fullUrl);
                     // Burada her bir sayfa için yapılacak işlemleri ekleyebilirsiniz
-                    System.out.println("Visited: " + fullUrl);
                     Thread.sleep(2000); // Her sayfa için bekleme süresi
 
                     // Ürün ismini ve fiyatını al
@@ -80,6 +79,9 @@ public class SokScraper implements Runnable {
                             WebElement titleElement = product.findElement(By.cssSelector(".CProductCard-module_title__u8bMW"));
                             String productName = titleElement.getText();
                             System.out.println("Product Name: " + productName);
+
+                            // Ürün ID'sini oluştur (ürün adını kullanarak)
+                            String productId = productName.toLowerCase().replaceAll("\\s+", "-");
 
                             // Fiyatı al
                             WebElement priceElement;
@@ -95,11 +97,20 @@ public class SokScraper implements Runnable {
                             } else {
                                 price = "Price not found";
                             }
-                            // Ürünü kaydet
-                            SokProduct productEntity = new SokProduct(productName, price, discount);
-                            sokDataRepository.save(productEntity);
-                            System.out.println("Saving product: " + productEntity);
 
+                            // Ürünü kaydet veya güncelle
+                            Optional<SokProduct> existingProductOpt = sokDataRepository.findById(productId);
+                            if (existingProductOpt.isPresent()) {
+                                SokProduct existingProduct = existingProductOpt.get();
+                                existingProduct.setPrice(price);
+                                existingProduct.setDiscount(discount);
+                                sokDataRepository.save(existingProduct);
+                                System.out.println("Updating product: " + existingProduct);
+                            } else {
+                                SokProduct productEntity = new SokProduct(productId, productName, price, discount);
+                                sokDataRepository.save(productEntity);
+                                System.out.println("Saving new product: " + productEntity);
+                            }
                         }
                         page++;
                     }

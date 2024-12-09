@@ -1,27 +1,25 @@
 package com.example.demo;
 
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document(collection = "a101")
 public class A101Product {
 
-    @Id
     private String id;
     private String name;
     private String price;
     private boolean discount;
 
-    public A101Product() {
-        // Parametresiz constructor
-    }
-
-    public A101Product(String name, String price, boolean discount) {
+    // Diğer alanlar ve metodlar...
+    // Yeni yapıcı metot
+    public A101Product(String id, String name, String price, boolean discount) {
+        this.id = id;
         this.name = name;
         this.price = price;
         this.discount = discount;
     }
 
+    // Getter ve setter metodları
     public String getId() {
         return id;
     }

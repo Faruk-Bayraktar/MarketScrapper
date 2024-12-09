@@ -2,6 +2,7 @@ package com.example.demo;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -88,11 +89,22 @@ public class MigrosScraper implements Runnable {
                             String productPrice = priceElements.get(i).getText();
                             boolean discount = false; // İndirim bilgisi ekleyin veya çıkarın
 
-                            // Ürünü kaydet
-                            MigrosProduct product = new MigrosProduct(productName, productPrice, discount);
-                            migrosDataRepository.save(product);
-                            System.out.println("Saving product: " + product);
+                            // Ürün ID'sini oluştur (ürün adını kullanarak)
+                            String productId = productName.toLowerCase().replaceAll("\\s+", "-");
 
+                            // Ürünü kaydet veya güncelle
+                            Optional<MigrosProduct> existingProductOpt = migrosDataRepository.findById(productId);
+                            if (existingProductOpt.isPresent()) {
+                                MigrosProduct existingProduct = existingProductOpt.get();
+                                existingProduct.setPrice(productPrice);
+                                existingProduct.setDiscount(discount);
+                                migrosDataRepository.save(existingProduct);
+                                System.out.println("Updating product: " + existingProduct);
+                            } else {
+                                MigrosProduct product = new MigrosProduct(productId, productName, productPrice, discount);
+                                migrosDataRepository.save(product);
+                                System.out.println("Saving new product: " + product);
+                            }
                         }
                         pageNumber++;
                     }
