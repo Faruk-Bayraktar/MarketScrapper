@@ -143,7 +143,15 @@ public class A101Scraper implements Runnable {
 
                 List<WebElement> productContainers = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("div.h-\\[96px\\].flex.pt-1.flex-col")));
 
+                // Sadece belirli sınıf kombinasyonuna sahip elemanları filtrele
+                List<WebElement> filteredProductContainers = new ArrayList<>();
                 for (WebElement productContainer : productContainers) {
+                    String classAttribute = productContainer.getAttribute("class");
+                    if (classAttribute.equals("h-[96px] flex pt-1 flex-col")) {
+                        filteredProductContainers.add(productContainer);
+                    }
+                }
+                for (WebElement productContainer : filteredProductContainers) {
                     // Ürün ismini çek
                     WebElement productNameElement = productContainer.findElement(By.cssSelector("div.mobile\\:text-xs.tablet\\:text-xs.line-clamp-3.h-12.font-medium.overflow-hidden.mb-\\[10px\\]"));
                     String productName = productNameElement.getText();
