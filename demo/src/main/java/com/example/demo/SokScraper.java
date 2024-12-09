@@ -87,11 +87,11 @@ public class SokScraper implements Runnable {
                             boolean discount = false;
                             if (!product.findElements(By.cssSelector(".CPriceBox-module_discountedPrice__15Ffw")).isEmpty()) {
                                 priceElement = product.findElement(By.cssSelector(".CPriceBox-module_discountedPrice__15Ffw"));
-                                price = "Discounted Price: " + priceElement.getText();
+                                price = priceElement.getText();
                                 discount = true;
                             } else if (!product.findElements(By.cssSelector(".CPriceBox-module_price__bYk-c")).isEmpty()) {
                                 priceElement = product.findElement(By.cssSelector(".CPriceBox-module_price__bYk-c"));
-                                price = "Normal Price: " + priceElement.getText();
+                                price = priceElement.getText();
                             } else {
                                 price = "Price not found";
                             }
