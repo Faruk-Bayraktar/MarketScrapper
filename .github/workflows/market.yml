@@ -8,7 +8,6 @@ on:
       - main
   schedule:
     - cron: '*/5 * * * *' # Her 5 dakikada bir çalışır
-    
 
 jobs:
   build-and-run:
@@ -55,3 +54,7 @@ jobs:
           done
           echo "MongoDB did not start in time."
           exit 1
+
+      # Uygulamanın çalıştırılması
+      - name: Run Application
+        run: java -jar demo/target/demo-0.0.1-SNAPSHOT.jar
