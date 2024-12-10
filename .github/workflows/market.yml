@@ -1,14 +1,13 @@
-name: Market Scraping Workflow
-
+name: main
 on:
-  schedule:
-    - cron: '0 */15 * * *' # Her 15 saatte bir çalışır
   push:
     branches:
       - main
   pull_request:
     branches:
       - main
+  schedule:
+    - cron: '0 */15 * * *' # Her 15 saatte bir çalıştır
 
 jobs:
   build-and-run:
@@ -20,7 +19,7 @@ jobs:
         ports:
           - 27017:27017
         options: >-
-          --health-cmd="mongosh --eval 'db.runCommand({ ping: 1 })'"
+          --health-cmd="mongo --eval 'db.runCommand({ ping: 1 })'"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=3
@@ -55,8 +54,3 @@ jobs:
           done
           echo "MongoDB did not start in time."
           exit 1
-
-      # Spring Boot uygulamasını çalıştırma
-      - name: Run Application
-        run: mvn spring-boot:run
-        working-directory: ./demo # demo klasörüne git
