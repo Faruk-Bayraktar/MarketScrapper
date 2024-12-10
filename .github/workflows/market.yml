@@ -36,6 +36,15 @@ jobs:
           distribution: 'temurin'
           java-version: '23'
 
+      # Chrome ve ChromeDriver'ın kurulması
+      - name: Set up Chrome
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget unzip
+          wget -q -O /tmp/chromedriver.zip https://chromedriver.storage.googleapis.com/$(curl -s https://chromedriver.storage.googleapis.com/LATEST_RELEASE)/chromedriver_linux64.zip
+          sudo unzip /tmp/chromedriver.zip chromedriver -d /usr/local/bin/
+          sudo apt-get install -y google-chrome-stable
+
       # Maven bağımlılıklarının yüklenmesi ve derlenmesi
       - name: Build with Maven
         run: mvn clean install
