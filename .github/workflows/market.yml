@@ -40,7 +40,7 @@ jobs:
       # Maven bağımlılıklarının yüklenmesi ve derlenmesi
       - name: Build with Maven
         run: mvn clean install
-        working-directory: . # Kök dizinde pom.xml bulunduğu için burada kalabilir
+        working-directory: ./demo # demo klasörüne git
 
       # MongoDB'nin hazır olup olmadığını kontrol etme
       - name: Wait for MongoDB
@@ -59,4 +59,4 @@ jobs:
       # Spring Boot uygulamasını çalıştırma
       - name: Run Application
         run: mvn spring-boot:run
-        working-directory: . # Aynı şekilde kök dizinde çalıştırılır
+        working-directory: ./demo # demo klasörüne git
