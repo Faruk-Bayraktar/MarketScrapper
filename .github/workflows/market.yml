@@ -69,5 +69,5 @@ jobs:
         run: |
           java -Dwebdriver.chrome.driver=/usr/local/bin/chromedriver \
                -Dwebdriver.chrome.whitelistedIps='' \
-               -Dwebdriver.chrome.args='--no-sandbox --disable-dev-shm-usage --headless --disable-gpu --remote-debugging-port=9222' \
+               -Dwebdriver.chrome.args='--remote-debugging-port=27017 --no-sandbox --disable-dev-shm-usage --headless --disable-gpu --remote-debugging-port=9222' \
                -jar demo/target/demo-0.0.1-SNAPSHOT.jar
