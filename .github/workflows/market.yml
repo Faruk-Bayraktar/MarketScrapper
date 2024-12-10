@@ -1,6 +1,8 @@
 name: Market Scraping Workflow
 
 on:
+  schedule:
+    - cron: '0 */15 * * *' # Her 15 saatte bir çalışır
   push:
     branches:
       - main
@@ -24,25 +26,26 @@ jobs:
           --health-retries=3
 
     steps:
-      # Checkout the repository
+      # Kodun repo'dan indirilmesi
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Set up Java environment
+      # Java ortamının ayarlanması
       - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
 
-      # Install dependencies and build the project
+      # Maven bağımlılıklarının yüklenmesi ve derlenmesi
       - name: Build with Maven
         run: mvn clean install
+        working-directory: . # Kök dizinde pom.xml bulunduğu için burada kalabilir
 
-      # Wait for MongoDB to be ready
-      - name: Wait for MongoDB 
+      # MongoDB'nin hazır olup olmadığını kontrol etme
+      - name: Wait for MongoDB
         run: |
-          for i in {1..10}; do
+          for i in {1..20}; do
             if nc -z localhost 27017; then
               echo "MongoDB is ready!"
               exit 0
@@ -53,6 +56,7 @@ jobs:
           echo "MongoDB did not start in time."
           exit 1
 
-      # Run the Spring Boot application
+      # Spring Boot uygulamasını çalıştırma
       - name: Run Application
         run: mvn spring-boot:run
+        working-directory: . # Aynı şekilde kök dizinde çalıştırılır
