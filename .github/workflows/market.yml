@@ -51,10 +51,10 @@ jobs:
         working-directory: ./demo # demo klasörüne git
 
       # MongoDB'nin hazır olup olmadığını kontrol etme
-      - name: Wait for MongoDB and Test Connection
+      - name: Wait for MongoDB
         run: |
           for i in {1..20}; do
-            if mongo --eval "db.runCommand({ ping: 1 })" localhost:27017; then
+            if nc -z localhost 27017; then
               echo "MongoDB is ready!"
               exit 0
             fi
