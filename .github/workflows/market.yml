@@ -44,10 +44,14 @@ jobs:
           # Download and install Google Chrome
           wget -q -O /tmp/google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
           sudo dpkg -i /tmp/google-chrome.deb || sudo apt-get install -y -f
+          # Install WebDriverManager
+          wget -q -O /tmp/webdrivermanager.jar https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.0.3/webdrivermanager-5.0.3-fat.jar
+          java -jar /tmp/webdrivermanager.jar chrome
 
       - name: Verify Chrome and ChromeDriver Versions
         run: |
           google-chrome --version
+          chromedriver --version
 
       # Build with Maven
       - name: Build with Maven
@@ -71,7 +75,7 @@ jobs:
       # Uygulamanın çalıştırılması
       - name: Run Application
         run: |
-          java -Dwebdriver.chrome.driver=/usr/local/bin/chromedriver \
+          java -Dwebdriver.chrome.driver=$(which chromedriver) \
                -Dwebdriver.chrome.whitelistedIps='' \
                -Dwebdriver.chrome.args='--no-sandbox --disable-dev-shm-usage --headless --disable-gpu --remote-debugging-port=9222' \
                -Dserver.port=8081 \
