@@ -7,7 +7,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: '0 0,15 * * *' # Her 15 saatte bir (00:00 ve 15:00'da çalışır)
+    - cron: '*/5 * * * *' # Her 5 dakikada bir çalışır
     
 
 jobs:
