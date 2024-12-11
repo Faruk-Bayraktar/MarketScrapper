@@ -36,29 +36,23 @@ jobs:
           distribution: 'temurin'
           java-version: '23'
 
-      # Chrome ve ChromeDriver'ın kurulması
-      - name: Install Chrome and ChromeDriver
+      # Google Chrome'un kurulması
+      - name: Install Google Chrome
         run: |
           sudo apt-get update -y
           sudo apt-get install -y wget unzip
-          # Download and install Google Chrome
           wget -q -O /tmp/google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
           sudo dpkg -i /tmp/google-chrome.deb || sudo apt-get install -y -f
-          # Install WebDriverManager
-          wget -q -O /tmp/webdrivermanager.jar https://github.com/bonigarcia/webdrivermanager/releases/download/webdrivermanager-5.0.3/webdrivermanager-5.0.3-fat.jar
-          java -jar /tmp/webdrivermanager.jar chrome
 
-      - name: Verify Chrome and ChromeDriver Versions
-        run: |
-          google-chrome --version
-          chromedriver --version
+      - name: Verify Google Chrome Version
+        run: google-chrome --version
 
-      # Build with Maven
+      # Maven ile projenin derlenmesi
       - name: Build with Maven
         run: mvn clean install
         working-directory: ./demo
 
-      # Wait for MongoDB to be ready
+      # MongoDB'nin hazır olup olmadığını kontrol etme
       - name: Wait for MongoDB
         run: |
           for i in {1..20}; do
