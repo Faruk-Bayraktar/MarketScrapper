@@ -61,7 +61,7 @@ jobs:
         working-directory: ./demo
 
       # MongoDB'nin hazır olup olmadığını kontrol etme
-      - name: Wait for MongoDB
+      - name: Wait for MongoDB 
         run: |
           $attempts = 0
           while ($attempts -lt 20) {
