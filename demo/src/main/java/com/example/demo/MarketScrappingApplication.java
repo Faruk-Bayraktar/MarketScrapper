@@ -47,8 +47,5 @@ public class MarketScrappingApplication implements CommandLineRunner {
         sokThread.join();
         // migrosThread.join();
 
-        // Uygulamayı durdur
-        SpringApplication.exit(context, () -> 0);
-        System.exit(0); // JVM'i tamamen kapat
     }
 }
