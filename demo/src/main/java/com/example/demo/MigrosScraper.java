@@ -8,7 +8,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.demo.repository.MigrosDataRepository;
@@ -28,19 +27,8 @@ public class MigrosScraper implements Runnable {
 
     @Override
     public void run() {
-        // Selenium WebDriver'ı başlat
         WebDriverManager.chromedriver().setup(); // Doğru sürücüyü otomatik bulur ve yükler
-
-        // Chrome seçeneklerini ayarla
-        ChromeOptions options = new ChromeOptions();
-        options.addArguments("--no-sandbox");
-        options.addArguments("--disable-dev-shm-usage");
-        options.addArguments("--headless");
-        options.addArguments("--disable-gpu");
-        options.addArguments("--remote-debugging-port=9222");
-
-        // WebDriver'ı başlat
-        WebDriver driver = new ChromeDriver(options);
+        WebDriver driver = new ChromeDriver();
         try {
             // Sayfayı aç
             driver.get(baseUrl);

@@ -11,7 +11,7 @@ on:
 
 jobs:
   build-and-run:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
 
     services:
       mongodb:
@@ -39,10 +39,7 @@ jobs:
       # Google Chrome'un kurulması
       - name: Install Google Chrome
         run: |
-          sudo apt-get update -y
-          sudo apt-get install -y wget unzip
-          wget -q -O /tmp/google-chrome.deb https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
-          sudo dpkg -i /tmp/google-chrome.deb || sudo apt-get install -y -f
+          choco install googlechrome -y
 
       - name: Verify Google Chrome Version
         run: google-chrome --version
@@ -55,15 +52,15 @@ jobs:
       # MongoDB'nin hazır olup olmadığını kontrol etme
       - name: Wait for MongoDB
         run: |
-          for i in {1..20}; do
-            if nc -z localhost 27017; then
-              echo "MongoDB is ready!"
+          for /l %i in (1, 1, 20) do (
+            if netstat -an | find "27017" >nul 2>&1 (
+              echo MongoDB is ready!
               exit 0
-            fi
-            echo "Waiting for MongoDB..."
-            sleep 5
-          done
-          echo "MongoDB did not start in time."
+            )
+            echo Waiting for MongoDB...
+            timeout /t 5 >nul
+          )
+          echo MongoDB did not start in time.
           exit 1
 
       # Uygulamanın çalıştırılması
