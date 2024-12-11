@@ -54,11 +54,12 @@ public class A101Scraper implements Runnable {
                 hrefList = hrefList.subList(4, hrefList.size());
             }
 
+            WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
             for (String href : hrefList) {
                 driver.get(href);
-                WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.h-\\[96px\\].flex.pt-1.flex-col"))); // Ürünlerin yüklendiğinden emin ol
 
-                List<WebElement> productContainers = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(By.cssSelector("div.h-\\[96px\\].flex.pt-1.flex-col")));
+                List<WebElement> productContainers = driver.findElements(By.cssSelector("div.h-\\[96px\\].flex.pt-1.flex-col"));
 
                 // Sadece belirli sınıf kombinasyonuna sahip elemanları filtrele
                 List<WebElement> filteredProductContainers = new ArrayList<>();

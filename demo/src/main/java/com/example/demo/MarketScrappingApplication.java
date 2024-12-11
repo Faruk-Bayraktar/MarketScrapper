@@ -41,8 +41,11 @@ public class MarketScrappingApplication implements CommandLineRunner {
         Thread migrosThread = new Thread(migrosScraper);
         migrosThread.start();
 
-        sokThread.join();
         a101Thread.join();
+        sokThread.join();
         migrosThread.join();
+
+        System.exit(0);
+
     }
 }
