@@ -1,14 +1,14 @@
-package com.example.demo;  //Bu proje için oluşturulan paket adı
+package com.example.demo;
 
-import org.springframework.beans.factory.annotation.Autowired; //Spring Framework'ün otomatik olarak bağlamaları yapabilmesi için kullanılan anotasyon
-import org.springframework.boot.CommandLineRunner; //Spring Boot uygulamalarının başlatılmasını sağlayan arayüz
-import org.springframework.boot.SpringApplication; //Spring Boot uygulamalarının başlatılmasını sağlayan sınıf
-import org.springframework.boot.autoconfigure.SpringBootApplication; //Spring Boot uygulamalarının otomatik yapılandırılmasını sağlayan anotasyon
-import org.springframework.data.mongodb.repository.config.EnableMongoRepositories; //MongoDB veritabanı işlemleri için kullanılan anotasyon
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-import com.example.demo.repository.A101DataRepository; //A101 verilerinin veritabanına kaydedilmesi için kullanılan repository sınıfı
-import com.example.demo.repository.MigrosDataRepository; //Migros verilerinin veritabanına kaydedilmesi için kullanılan repository sınıfı
-import com.example.demo.repository.SokDataRepository; //Şok verilerinin veritabanına kaydedilmesi için kullanılan repository sınıfı
+import com.example.demo.repository.A101DataRepository;
+import com.example.demo.repository.MigrosDataRepository;
+import com.example.demo.repository.SokDataRepository;
 
 @SpringBootApplication
 @EnableMongoRepositories
