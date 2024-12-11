@@ -25,12 +25,10 @@ jobs:
           distribution: 'temurin'
           java-version: '23'
 
-      # Google Chrome'un belirli bir sürümünün manuel olarak indirilip kurulması
+      # Google Chrome'un belirli bir sürümünün kurulması
       - name: Install Google Chrome
         run: |
-          $ProgressPreference = 'SilentlyContinue'
-          Invoke-WebRequest -Uri "https://dl.google.com/chrome/install/131.0.6778.140/chrome_installer.exe" -OutFile "$env:TEMP\chrome_installer.exe"
-          Start-Process -FilePath "$env:TEMP\chrome_installer.exe" -ArgumentList "/silent /install" -NoNewWindow -Wait
+          choco install googlechrome --version=131.0.6778.140 -y
 
       - name: Verify Google Chrome Version
         run: google-chrome --version
