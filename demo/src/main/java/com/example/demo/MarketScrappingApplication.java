@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
 import com.example.demo.repository.A101DataRepository;
@@ -23,8 +24,10 @@ public class MarketScrappingApplication implements CommandLineRunner {
     @Autowired
     private MigrosDataRepository migrosDataRepository;
 
+    private static ConfigurableApplicationContext context;
+
     public static void main(String[] args) {
-        SpringApplication.run(MarketScrappingApplication.class, args);
+        context = SpringApplication.run(MarketScrappingApplication.class, args);
     }
 
     @Override
@@ -45,7 +48,7 @@ public class MarketScrappingApplication implements CommandLineRunner {
         sokThread.join();
         migrosThread.join();
 
-        System.exit(0);
+        SpringApplication.exit(context, () -> 0);
 
     }
 }
