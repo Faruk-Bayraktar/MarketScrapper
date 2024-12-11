@@ -34,12 +34,14 @@ jobs:
           distribution: 'temurin'
           java-version: '23'
 
-      # Google Chrome'un manuel olarak indirilip kurulması
-      - name: Install Google Chrome
+      # Chrome ve ChromeDriver'ın kurulması
+      - name: Set up Chrome
         run: |
           $ProgressPreference = 'SilentlyContinue'
           Invoke-WebRequest -Uri "https://dl.google.com/chrome/install/latest/chrome_installer.exe" -OutFile "$env:TEMP\chrome_installer.exe"
           Start-Process -FilePath "$env:TEMP\chrome_installer.exe" -ArgumentList "/silent /install" -NoNewWindow -Wait
+          Invoke-WebRequest -Uri "https://chromedriver.storage.googleapis.com/114.0.5735.90/chromedriver_win32.zip" -OutFile "$env:TEMP\chromedriver.zip"
+          Expand-Archive -Path "$env:TEMP\chromedriver.zip" -DestinationPath "$env:ProgramFiles\Google\Chrome\Application"
 
       - name: Verify Google Chrome Version
         run: |
@@ -49,7 +51,9 @@ jobs:
       - name: Install MongoDB
         run: |
           choco install mongodb -y
-          net start MongoDB
+          if (-not (Get-Service -Name MongoDB -ErrorAction SilentlyContinue)) {
+            net start MongoDB
+          }
 
       # Maven ile projenin derlenmesi
       - name: Build with Maven
@@ -73,7 +77,7 @@ jobs:
       # Uygulamanın çalıştırılması
       - name: Run Application
         run: |
-          java -Dwebdriver.chrome.driver=$(which chromedriver) \
+          java -Dwebdriver.chrome.driver="C:\Program Files\Google\Chrome\Application\chromedriver.exe" \
                -Dwebdriver.chrome.whitelistedIps='' \
                -Dwebdriver.chrome.args='--no-sandbox --disable-dev-shm-usage --headless --disable-gpu --remote-debugging-port=9222' \
                -Dserver.port=8081 \
