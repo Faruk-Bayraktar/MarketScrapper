@@ -13,17 +13,6 @@ jobs:
   build-and-run:
     runs-on: windows-latest
 
-    services:
-      mongodb:
-        image: mongo:5.0
-        ports:
-          - 27017:27017
-        options: >-
-          --health-cmd="mongo --eval 'db.runCommand({ ping: 1 })'"
-          --health-interval=10s
-          --health-timeout=5s
-          --health-retries=3
-
     steps:
       # Kodun repo'dan indirilmesi
       - name: Checkout Code
@@ -43,6 +32,12 @@ jobs:
 
       - name: Verify Google Chrome Version
         run: google-chrome --version
+
+      # MongoDB'nin kurulması
+      - name: Install MongoDB
+        run: |
+          choco install mongodb -y
+          net start MongoDB
 
       # Maven ile projenin derlenmesi
       - name: Build with Maven
