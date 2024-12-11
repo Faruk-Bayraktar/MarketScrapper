@@ -33,7 +33,7 @@ public class MarketScrappingApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        CountDownLatch latch = new CountDownLatch(3); // 3 thread için latch
+        CountDownLatch latch = new CountDownLatch(1); // 3 thread için latch
 
         SokScraper sokScraper = new SokScraper(sokDataRepository, latch);
         Thread sokThread = new Thread(sokScraper);
