@@ -1,5 +1,7 @@
 package com.example.demo;
 
+import java.util.concurrent.CountDownLatch;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -31,20 +33,22 @@ public class MarketScrappingApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        SokScraper sokScraper = new SokScraper(sokDataRepository);
+        CountDownLatch latch = new CountDownLatch(3); // 3 thread için latch
+
+        SokScraper sokScraper = new SokScraper(sokDataRepository, latch);
         Thread sokThread = new Thread(sokScraper);
         sokThread.start();
 
-        // A101Scraper a101scraper = new A101Scraper(a101DataRepository);
+        // A101Scraper a101scraper = new A101Scraper(a101DataRepository, latch);
         // Thread a101Thread = new Thread(a101scraper);
         // a101Thread.start();
-        // MigrosScraper migrosScraper = new MigrosScraper(migrosDataRepository);
+        // MigrosScraper migrosScraper = new MigrosScraper(migrosDataRepository, latch);
         // Thread migrosThread = new Thread(migrosScraper);
         // migrosThread.start();
-        // a101Thread.join();
-        sokThread.join();
-        // migrosThread.join();
-        // Uygulamanın kapanmasını sağla
+        // Thread'lerin tamamlanmasını bekle
+        latch.await();
+
+        // Uygulamayı kapat
         context.close();
     }
 }
