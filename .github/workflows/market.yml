@@ -7,7 +7,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: '0 */15 * * *' # Her 15 saatte bir çalışır
+    - cron: '0 */17 * * *' # Her 17 saatte bir çalışır
 
 jobs:
   build-and-run:
