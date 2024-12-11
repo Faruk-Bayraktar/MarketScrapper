@@ -3,6 +3,7 @@ package com.example.demo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -17,10 +18,12 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 public class MigrosScraper implements Runnable {
 
     private final MigrosDataRepository migrosDataRepository;
+    private final CountDownLatch latch;
 
     @Autowired
-    public MigrosScraper(MigrosDataRepository migrosDataRepository) {
+    public MigrosScraper(MigrosDataRepository migrosDataRepository, CountDownLatch latch) {
         this.migrosDataRepository = migrosDataRepository;
+        this.latch = latch;
     }
 
     private final String baseUrl = "https://www.migros.com.tr/hemen/";
@@ -113,10 +116,8 @@ public class MigrosScraper implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            // Tarayıcıyı kapat
-            driver.quit();
-            // Thread'i sonlandır
-            Thread.currentThread().interrupt();
+            // Latch'in sayacını azalt
+            latch.countDown();
         }
     }
 

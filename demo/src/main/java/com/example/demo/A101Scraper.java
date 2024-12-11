@@ -4,6 +4,7 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CountDownLatch;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -20,10 +21,12 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 public class A101Scraper implements Runnable {
 
     private final A101DataRepository a101DataRepository;
+    private final CountDownLatch latch;
 
     @Autowired
-    public A101Scraper(A101DataRepository a101DataRepository) {
+    public A101Scraper(A101DataRepository a101DataRepository, CountDownLatch latch) {
         this.a101DataRepository = a101DataRepository;
+        this.latch = latch;
     }
 
     private final String baseUrl = "https://www.a101.com.tr/kapida"; // Burayı kendi sitenizin URL'siyle değiştirin
@@ -105,10 +108,8 @@ public class A101Scraper implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            // Tarayıcıyı kapat
-            driver.quit();
-            // Thread'i sonlandır
-            Thread.currentThread().interrupt();
+            // Latch'in sayacını azalt
+            latch.countDown();
         }
     }
 }

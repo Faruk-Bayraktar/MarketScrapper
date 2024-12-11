@@ -3,7 +3,6 @@ package com.example.demo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.CountDownLatch;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -17,15 +16,13 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class SokScraper implements Runnable {
 
-    private final CountDownLatch latch;
-
+    // private final CountDownLatch latch;
     private final String baseUrl = "https://www.sokmarket.com.tr/";
     private final SokDataRepository sokDataRepository;
 
     @Autowired
-    public SokScraper(SokDataRepository sokDataRepository, CountDownLatch latch) {
+    public SokScraper(SokDataRepository sokDataRepository) {
         this.sokDataRepository = sokDataRepository;
-        this.latch = latch;
     }
 
     @Override
@@ -134,10 +131,9 @@ public class SokScraper implements Runnable {
             } catch (Exception e) {
                 System.err.println("Tarayıcı kapatılırken hata oluştu: " + e.getMessage());
             } finally {
-                // Tarayıcıyı kapat
+
                 driver.quit();
-                // Latch'in sayacını azalt
-                latch.countDown();
+
             }
         }
     }
