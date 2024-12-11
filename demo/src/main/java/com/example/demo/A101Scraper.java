@@ -51,7 +51,7 @@ public class A101Scraper implements Runnable {
             }
             // İlk elemanı atla
             if (!hrefList.isEmpty()) {
-                hrefList = hrefList.subList(4, hrefList.size());
+                hrefList = hrefList.subList(21, hrefList.size());
             }
 
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));

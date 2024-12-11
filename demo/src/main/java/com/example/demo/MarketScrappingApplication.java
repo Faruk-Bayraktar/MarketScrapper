@@ -36,19 +36,19 @@ public class MarketScrappingApplication implements CommandLineRunner {
         Thread sokThread = new Thread(sokScraper);
         sokThread.start();
 
-        A101Scraper a101scraper = new A101Scraper(a101DataRepository);
-        Thread a101Thread = new Thread(a101scraper);
-        a101Thread.start();
-
-        MigrosScraper migrosScraper = new MigrosScraper(migrosDataRepository);
-        Thread migrosThread = new Thread(migrosScraper);
-        migrosThread.start();
-
-        a101Thread.join();
+        // A101Scraper a101scraper = new A101Scraper(a101DataRepository);
+        // Thread a101Thread = new Thread(a101scraper);
+        // a101Thread.start();
+        // MigrosScraper migrosScraper = new MigrosScraper(migrosDataRepository);
+        // Thread migrosThread = new Thread(migrosScraper);
+        // migrosThread.start();
+        // Thread'lerin bitmesini bekle
+        // a101Thread.join();
         sokThread.join();
-        migrosThread.join();
+        // migrosThread.join();
 
+        // Uygulamayı durdur
         SpringApplication.exit(context, () -> 0);
-
+        System.exit(0); // JVM'i tamamen kapat
     }
 }

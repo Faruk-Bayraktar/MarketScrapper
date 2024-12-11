@@ -43,7 +43,7 @@ public class SokScraper implements Runnable {
             }
             // İlk 3 elemanı ve sondan bir önceki elemanı çıkart
             if (hrefs.size() > 3) {
-                hrefs = hrefs.subList(3, hrefs.size());
+                hrefs = hrefs.subList(21, hrefs.size());
             }
             // Sonuncu elemanı çıkart
             if (!hrefs.isEmpty()) {
