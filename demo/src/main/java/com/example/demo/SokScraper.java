@@ -47,11 +47,11 @@ public class SokScraper implements Runnable {
             }
             // İlk 3 elemanı ve sondan bir önceki elemanı çıkart
             if (hrefs.size() > 3) {
-                hrefs = hrefs.subList(21, hrefs.size());
+                hrefs = hrefs.subList(3, hrefs.size());
             }
             // Sonuncu elemanı çıkart
             if (!hrefs.isEmpty()) {
-                hrefs.remove(hrefs.size() - 1);
+                hrefs.remove(hrefs.size() - 19);
             }
             // Belirtilen URL'yi güncelle
             String oldUrl = "https://www.sokmarket.com.tr/giyim-ve-ayakkabi-ve-aksesuar-c-20886";
@@ -129,7 +129,9 @@ public class SokScraper implements Runnable {
             } catch (Exception e) {
                 System.err.println("Tarayıcı kapatılırken hata oluştu: " + e.getMessage());
             } finally {
-                // Latch'i azalt (işlem tamamlandı olarak işaretle)
+                // Tarayıcıyı kapat
+                driver.quit();
+                // Latch'in sayacını azalt
                 latch.countDown();
             }
         }
