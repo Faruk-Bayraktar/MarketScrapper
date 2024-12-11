@@ -34,10 +34,12 @@ jobs:
           distribution: 'temurin'
           java-version: '23'
 
-      # Google Chrome'un en son sürümünün kurulması
+      # Google Chrome'un manuel olarak indirilip kurulması
       - name: Install Google Chrome
         run: |
-          choco install googlechrome -y
+          $ProgressPreference = 'SilentlyContinue'
+          Invoke-WebRequest -Uri "https://dl.google.com/chrome/install/latest/chrome_installer.exe" -OutFile "$env:TEMP\chrome_installer.exe"
+          Start-Process -FilePath "$env:TEMP\chrome_installer.exe" -ArgumentList "/silent /install" -NoNewWindow -Wait
 
       - name: Verify Google Chrome Version
         run: |
