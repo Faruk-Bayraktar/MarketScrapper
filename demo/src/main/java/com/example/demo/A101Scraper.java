@@ -79,12 +79,9 @@ public class A101Scraper implements Runnable {
                     if (!priceContainer.findElements(By.cssSelector("div.text-md.absolute.bottom-0.font-medium.tablet\\:text-base.text-\\[\\#EA242A\\]")).isEmpty()) {
                         price = priceContainer.findElement(By.cssSelector("div.text-md.absolute.bottom-0.font-medium.tablet\\:text-base.text-\\[\\#EA242A\\]")).getText();
                         discount = true;
-                        System.out.println("Ürün İsmi: " + productName + " - İndirimli Fiyat: " + price);
                     } else if (!priceContainer.findElements(By.cssSelector("div.text-md.absolute.bottom-0.font-medium.tablet\\:text-base.text-\\[\\#333\\]")).isEmpty()) {
                         price = priceContainer.findElement(By.cssSelector("div.text-md.absolute.bottom-0.font-medium.tablet\\:text-base.text-\\[\\#333\\]")).getText();
-                        System.out.println("Ürün İsmi: " + productName + " - Normal Fiyat: " + price);
                     } else {
-                        System.out.println("Ürün İsmi: " + productName + " - Fiyat bulunamadı");
                         continue;
                     }
 
@@ -107,7 +104,10 @@ public class A101Scraper implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
+            // Tarayıcıyı kapat
             driver.quit();
+            // Thread'i sonlandır
+            Thread.currentThread().interrupt();
         }
     }
 }

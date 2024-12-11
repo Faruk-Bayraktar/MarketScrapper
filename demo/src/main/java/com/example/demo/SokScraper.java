@@ -77,7 +77,6 @@ public class SokScraper implements Runnable {
                             // Ürün ismini al
                             WebElement titleElement = product.findElement(By.cssSelector(".CProductCard-module_title__u8bMW"));
                             String productName = titleElement.getText();
-                            System.out.println("Product Name: " + productName);
 
                             // Ürün ID'sini oluştur (ürün adını kullanarak)
                             String productId = productName.toLowerCase().replaceAll("\\s+", "-");
@@ -120,6 +119,8 @@ public class SokScraper implements Runnable {
         } finally {
             // Tarayıcıyı kapat
             driver.quit();
+            // Thread'i sonlandır
+            Thread.currentThread().interrupt();
         }
     }
 }

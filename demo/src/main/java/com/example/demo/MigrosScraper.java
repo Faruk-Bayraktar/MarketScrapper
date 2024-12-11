@@ -115,6 +115,8 @@ public class MigrosScraper implements Runnable {
         } finally {
             // Tarayıcıyı kapat
             driver.quit();
+            // Thread'i sonlandır
+            Thread.currentThread().interrupt();
         }
     }
 
