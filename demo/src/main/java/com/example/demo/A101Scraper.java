@@ -9,6 +9,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,20 @@ public class A101Scraper implements Runnable {
 
     @Override
     public void run() {
+        // WebDriverManager.chromedriver().setup(); // Doğru sürücüyü otomatik bulur ve yükler
+        // WebDriver driver = new ChromeDriver();
         WebDriverManager.chromedriver().setup(); // Doğru sürücüyü otomatik bulur ve yükler
-        WebDriver driver = new ChromeDriver();
+
+        // Chrome seçeneklerini ayarla
+        ChromeOptions options = new ChromeOptions();
+        options.addArguments("--no-sandbox");
+        options.addArguments("--disable-dev-shm-usage");
+        options.addArguments("--headless");
+        options.addArguments("--disable-gpu");
+        options.addArguments("--remote-debugging-port=9222");
+
+        // WebDriver'ı başlat
+        WebDriver driver = new ChromeDriver(options);
         try {
             driver.get(baseUrl);
             Thread.sleep(5000); // Gerekirse süreyi artırabilirsiniz

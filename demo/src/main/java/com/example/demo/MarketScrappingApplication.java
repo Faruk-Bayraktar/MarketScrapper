@@ -29,14 +29,13 @@ public class MarketScrappingApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        SokScraper sokScraper = new SokScraper(sokDataRepository);
-        Thread sokThread = new Thread(sokScraper);
-        sokThread.start();
+        // SokScraper sokScraper = new SokScraper(sokDataRepository);
+        // Thread sokThread = new Thread(sokScraper);
+        // sokThread.start();
 
-        A101Scraper a101scraper = new A101Scraper(a101DataRepository);
-        Thread a101Thread = new Thread(a101scraper);
-        a101Thread.start();
-
+        // A101Scraper a101scraper = new A101Scraper(a101DataRepository);
+        // Thread a101Thread = new Thread(a101scraper);
+        // a101Thread.start();
         MigrosScraper migrosScraper = new MigrosScraper(migrosDataRepository);
         Thread migrosThread = new Thread(migrosScraper);
         migrosThread.start();
