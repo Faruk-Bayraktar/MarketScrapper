@@ -35,10 +35,6 @@ public class MarketScrappingApplication implements CommandLineRunner {
     public void run(String... args) throws Exception {
         CountDownLatch latch = new CountDownLatch(1); // 3 thread için latch
 
-        SokScraper sokScraper = new SokScraper(sokDataRepository, latch);
-        Thread sokThread = new Thread(sokScraper);
-        sokThread.start();
-
         // A101Scraper a101scraper = new A101Scraper(a101DataRepository, latch);
         // Thread a101Thread = new Thread(a101scraper);
         // a101Thread.start();
@@ -46,9 +42,19 @@ public class MarketScrappingApplication implements CommandLineRunner {
         // Thread migrosThread = new Thread(migrosScraper);
         // migrosThread.start();
         // Thread'lerin tamamlanmasını bekle
-        latch.await();
+        try {
+            // Sok Scraper
+            SokScraper sokScraper = new SokScraper(sokDataRepository, latch);
+            Thread sokThread = new Thread(sokScraper);
+            sokThread.start();
 
-        // Uygulamayı kapat
-        context.close();
+            // Thread'lerin tamamlanmasını bekle
+            latch.await();
+        } finally {
+            // Uygulamayı güvenli bir şekilde kapat
+            if (context != null) {
+                context.close();
+            }
+        }
     }
 }
