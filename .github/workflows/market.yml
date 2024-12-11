@@ -63,15 +63,17 @@ jobs:
       # MongoDB'nin hazır olup olmadığını kontrol etme
       - name: Wait for MongoDB
         run: |
-          for /l %i in (1, 1, 20) do (
-            if netstat -an | find "27017" >nul 2>&1 (
-              echo MongoDB is ready!
+          $attempts = 0
+          while ($attempts -lt 20) {
+            if (netstat -an | Select-String "27017") {
+              Write-Output "MongoDB is ready!"
               exit 0
-            )
-            echo Waiting for MongoDB...
-            timeout /t 5 >nul
-          )
-          echo MongoDB did not start in time.
+            }
+            Write-Output "Waiting for MongoDB..."
+            Start-Sleep -Seconds 5
+            $attempts++
+          }
+          Write-Output "MongoDB did not start in time."
           exit 1
 
       # Uygulamanın çalıştırılması
