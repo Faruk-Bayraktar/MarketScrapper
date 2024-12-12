@@ -25,6 +25,7 @@ public class MarketScrappingApplication implements CommandLineRunner {
 
     @Autowired
     private MigrosDataRepository migrosDataRepository;
+
     private static ConfigurableApplicationContext context;
 
     public static void main(String[] args) {
@@ -33,7 +34,7 @@ public class MarketScrappingApplication implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        CountDownLatch latch = new CountDownLatch(3); // 3 thread için latch
+        CountDownLatch latch = new CountDownLatch(3);
 
         try {
 
@@ -49,7 +50,6 @@ public class MarketScrappingApplication implements CommandLineRunner {
             Thread migrosThread = new Thread(migrosScraper);
             migrosThread.start();
 
-            // Thread'lerin tamamlanmasını bekle
             latch.await();
         } finally {
 

@@ -38,21 +38,16 @@ public class A101Scraper implements Runnable {
 
         try {
             driver.get(baseUrl);
-            Thread.sleep(5000); // Gerekirse süreyi artırabilirsiniz
+            Thread.sleep(5000);
 
-            // Tüm <a class="block w-full"> elemanlarını seç
             List<WebElement> linkElements = driver.findElements(By.cssSelector("a.block.w-full"));
-            // Href değerlerini saklamak için bir liste oluştur
             List<String> hrefList = new ArrayList<>();
 
             for (WebElement linkElement : linkElements) {
-                // href değerini al
                 String hrefValue = linkElement.getAttribute("href");
 
-                // Listeye ekle
                 hrefList.add(hrefValue);
             }
-            // İlk elemanı atla
             if (!hrefList.isEmpty()) {
                 hrefList = hrefList.subList(4, hrefList.size());
             }
@@ -60,11 +55,10 @@ public class A101Scraper implements Runnable {
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
             for (String href : hrefList) {
                 driver.get(href);
-                wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.h-\\[96px\\].flex.pt-1.flex-col"))); // Ürünlerin yüklendiğinden emin ol
+                wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("div.h-\\[96px\\].flex.pt-1.flex-col")));
 
                 List<WebElement> productContainers = driver.findElements(By.cssSelector("div.h-\\[96px\\].flex.pt-1.flex-col"));
 
-                // Sadece belirli sınıf kombinasyonuna sahip elemanları filtrele
                 List<WebElement> filteredProductContainers = new ArrayList<>();
                 for (WebElement productContainer : productContainers) {
                     String classAttribute = productContainer.getAttribute("class");
@@ -73,8 +67,6 @@ public class A101Scraper implements Runnable {
                     }
                 }
                 for (WebElement productContainer : filteredProductContainers) {
-                    // Ürün ismini çek
-                    // Ürün ismini çek
                     WebElement productNameElement = productContainer.findElement(By.cssSelector("div.mobile\\:text-xs.tablet\\:text-xs.line-clamp-3.h-12.font-medium.overflow-hidden.mb-\\[10px\\]"));
                     String productName = productNameElement.getText();
                     WebElement priceContainer = productContainer.findElement(By.cssSelector("div.h-\\[39px\\].w-full.relative"));
@@ -109,15 +101,12 @@ public class A101Scraper implements Runnable {
             e.printStackTrace();
         } finally {
             try {
-                // Tarayıcıyı kapat
-
                 driver.quit();
 
             } catch (Exception e) {
                 System.err.println("Tarayıcı kapatılırken hata oluştu: " + e.getMessage());
             } finally {
                 latch.countDown();
-
             }
         }
     }

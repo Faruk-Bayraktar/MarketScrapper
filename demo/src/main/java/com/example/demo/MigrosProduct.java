@@ -10,8 +10,6 @@ public class MigrosProduct {
     private String price;
     private boolean discount;
 
-    // Diğer alanlar ve metodlar...
-    // Yeni yapıcı metot
     public MigrosProduct(String id, String name, String price, boolean discount) {
         this.id = id;
         this.name = name;
@@ -19,7 +17,6 @@ public class MigrosProduct {
         this.discount = discount;
     }
 
-    // Getter ve setter metodları
     public String getId() {
         return id;
     }
