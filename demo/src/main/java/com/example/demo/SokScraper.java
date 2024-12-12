@@ -45,19 +45,14 @@ public class SokScraper implements Runnable {
                 // Her bir a etiketinin href özniteliğini listeye ekle
                 hrefs.add(link.getAttribute("href"));
             }
-            // İlk 3 elemanı ve sondan bir önceki elemanı çıkart
-            // if (hrefs.size() > 3) {
-            //     hrefs = hrefs.subList(21, hrefs.size());
-            // }
-            // // Sonuncu elemanı çıkart
-            // if (!hrefs.isEmpty()) {
-            //     hrefs.remove(hrefs.size() - 1);
-            // }
-            if (hrefs.size() >= 4) {
-                hrefs = hrefs.subList(3, 4);
-            } else {
-                hrefs.clear(); // Eğer 4. eleman yoksa listeyi boşalt
+            if (hrefs.size() > 3) {
+                hrefs = hrefs.subList(21, hrefs.size());
             }
+            // Sonuncu elemanı çıkart
+            if (!hrefs.isEmpty()) {
+                hrefs.remove(hrefs.size() - 1);
+            }
+
             // Belirtilen URL'yi güncelle
             String oldUrl = "https://www.sokmarket.com.tr/giyim-ve-ayakkabi-ve-aksesuar-c-20886";
             String newUrl = "https://www.sokmarket.com.tr/giyim-ayakkabi-ve-aksesuar-c-20886";

@@ -29,11 +29,11 @@ public class A101Scraper implements Runnable {
         this.latch = latch;
     }
 
-    private final String baseUrl = "https://www.a101.com.tr/kapida"; // Burayı kendi sitenizin URL'siyle değiştirin
+    private final String baseUrl = "https://www.a101.com.tr/kapida";
 
     @Override
     public void run() {
-        WebDriverManager.chromedriver().setup(); // Doğru sürücüyü otomatik bulur ve yükler
+        WebDriverManager.chromedriver().setup();
         WebDriver driver = new ChromeDriver();
 
         try {
@@ -54,7 +54,7 @@ public class A101Scraper implements Runnable {
             }
             // İlk elemanı atla
             if (!hrefList.isEmpty()) {
-                hrefList = hrefList.subList(21, hrefList.size());
+                hrefList = hrefList.subList(4, hrefList.size());
             }
 
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(20));
