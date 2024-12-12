@@ -42,12 +42,9 @@ public class MigrosScraper implements Runnable {
 
             for (WebElement categoryElement : categoryElements) {
                 List<WebElement> linkElements = categoryElement.findElements(By.cssSelector("a[id^='home-page-category-card-']"));
-
                 for (WebElement linkElement : linkElements) {
                     String idValue = linkElement.getAttribute("id");
-
                     String idSuffix = idValue.substring(idValue.lastIndexOf("card-") + 5);
-
                     idSuffixes.add(idSuffix);
                 }
             }

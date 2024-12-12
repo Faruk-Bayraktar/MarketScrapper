@@ -30,35 +30,28 @@ public class SokScraper implements Runnable {
 
     @Override
     public void run() {
-        WebDriverManager.chromedriver().setup(); // Doğru sürücüyü otomatik bulur ve yükler
+        WebDriverManager.chromedriver().setup();
         WebDriver driver = new ChromeDriver();
         try {
-            // Sayfayı aç
             driver.get(baseUrl);
 
-            // Bir süre bekle (JavaScript yüklemesi için)
-            Thread.sleep(3000); // Gerekirse süreyi artırabilirsiniz
-            // Belirtilen div altındaki tüm a etiketlerini bul
+            Thread.sleep(3000);
             List<WebElement> links = driver.findElements(By.cssSelector(".CategoryList_categories__wmXtl.CategoryList_isMegaMenu__iH1P5 a"));
             List<String> hrefs = new ArrayList<>();
             for (WebElement link : links) {
-                // Her bir a etiketinin href özniteliğini listeye ekle
                 hrefs.add(link.getAttribute("href"));
             }
             if (hrefs.size() > 3) {
-                hrefs = hrefs.subList(21, hrefs.size());
+                hrefs = hrefs.subList(3, hrefs.size());
             }
-            // Sonuncu elemanı çıkart
             if (!hrefs.isEmpty()) {
                 hrefs.remove(hrefs.size() - 1);
             }
 
-            // Belirtilen URL'yi güncelle
             String oldUrl = "https://www.sokmarket.com.tr/giyim-ve-ayakkabi-ve-aksesuar-c-20886";
             String newUrl = "https://www.sokmarket.com.tr/giyim-ayakkabi-ve-aksesuar-c-20886";
 
             if (hrefs.contains(oldUrl)) {
-                // URL'yi güncelle
                 int index = hrefs.indexOf(oldUrl);
                 hrefs.set(index, newUrl);
             }
@@ -69,23 +62,18 @@ public class SokScraper implements Runnable {
                 while (hasNextPage) {
                     String fullUrl = href + "?page=" + page;
                     driver.get(fullUrl);
-                    // Burada her bir sayfa için yapılacak işlemleri ekleyebilirsiniz
-                    Thread.sleep(2000); // Her sayfa için bekleme süresi
+                    Thread.sleep(2000);
 
-                    // Ürün ismini ve fiyatını al
                     List<WebElement> products = driver.findElements(By.cssSelector(".CProductCard-module_infoContainer__F8uxY"));
                     if (products.isEmpty()) {
                         hasNextPage = false;
                     } else {
                         for (WebElement product : products) {
-                            // Ürün ismini al
                             WebElement titleElement = product.findElement(By.cssSelector(".CProductCard-module_title__u8bMW"));
                             String productName = titleElement.getText();
 
-                            // Ürün ID'sini oluştur (ürün adını kullanarak)
                             String productId = productName.toLowerCase().replaceAll("\\s+", "-");
 
-                            // Fiyatı al
                             WebElement priceElement;
                             String price;
                             boolean discount = false;
@@ -100,7 +88,6 @@ public class SokScraper implements Runnable {
                                 price = "Price not found";
                             }
 
-                            // Ürünü kaydet veya güncelle
                             Optional<SokProduct> existingProductOpt = sokDataRepository.findById(productId);
                             if (existingProductOpt.isPresent()) {
                                 SokProduct existingProduct = existingProductOpt.get();
