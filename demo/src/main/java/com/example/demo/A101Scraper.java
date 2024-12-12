@@ -108,8 +108,17 @@ public class A101Scraper implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            // Latch'in sayacını azalt
-            latch.countDown();
+            try {
+                // Tarayıcıyı kapat
+
+                driver.quit();
+
+            } catch (Exception e) {
+                System.err.println("Tarayıcı kapatılırken hata oluştu: " + e.getMessage());
+            } finally {
+                latch.countDown();
+
+            }
         }
     }
 }

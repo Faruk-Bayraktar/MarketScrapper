@@ -128,9 +128,7 @@ public class SokScraper implements Runnable {
         } finally {
             try {
                 // Tarayıcıyı kapat
-                if (driver != null) {
-                    driver.quit();
-                }
+                driver.quit();
             } catch (Exception e) {
                 System.err.println("Tarayıcı kapatılırken hata oluştu: " + e.getMessage());
             } finally {
