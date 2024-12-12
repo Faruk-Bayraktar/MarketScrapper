@@ -96,16 +96,8 @@ public class MigrosScraper implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            try {
-
-                driver.quit();
-
-            } catch (Exception e) {
-                System.err.println("Tarayıcı kapatılırken hata oluştu: " + e.getMessage());
-            } finally {
-                latch.countDown();
-
-            }
+            driver.quit();
+            latch.countDown();
         }
     }
 

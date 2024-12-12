@@ -121,15 +121,8 @@ public class SokScraper implements Runnable {
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
-            try {
-                // Tarayıcıyı kapat
-                driver.quit();
-            } catch (Exception e) {
-                System.err.println("Tarayıcı kapatılırken hata oluştu: " + e.getMessage());
-            } finally {
-                latch.countDown();
-
-            }
+            driver.quit();
+            latch.countDown();
         }
     }
 }
