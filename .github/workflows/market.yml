@@ -6,8 +6,8 @@ on:
   pull_request:
     branches:
       - main
-  schedule:
-    - cron: '0 */15 * * *' # Her 15 saatte bir çalışır
+# schedule:
+#    - cron: '0 */15 * * *' # Her 15 saatte bir çalışır
     
 jobs:
   build-and-run:
