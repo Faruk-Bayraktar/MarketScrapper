@@ -2,10 +2,10 @@ package com.example.demo;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "a101")
+@Document(collection = "a101") // MOngoDb ye kaydedilecek collection adı
 public class A101Product {
 
-    private String id;
+    private String id; // MongoDb deki id alanı
     private String name;
     private String price;
     private boolean discount;
@@ -16,6 +16,7 @@ public class A101Product {
         this.price = price;
         this.discount = discount;
     }
+//Getter Ve Setterlar
 
     public String getId() {
         return id;

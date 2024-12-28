@@ -1,10 +1,10 @@
 package com.example.demo;
 
-import java.time.Duration;
+import java.time.Duration; // Duration sinifi, zaman araliklarini temsil etmek icin kullanilir.
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.CountDownLatch;
+import java.util.List; // List sinifi, listeleri temsil etmek icin kullanilir.
+import java.util.Optional; // Optional sinifi, bir nesnenin var olup olmadigini kontrol etmek icin kullanilir.
+import java.util.concurrent.CountDownLatch; // CountDownLatch sinifi, bir thread grubunun diger threadlerin tamamlanmasini beklemesini saglar.
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -12,7 +12,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired; // Spring tarafindan otomatik olarak bean olusturulmasi icin kullanilir. Beanler Spring Container tarafindan yonetilir.
 
 import com.example.demo.repository.A101DataRepository;
 
@@ -21,10 +21,10 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 public class A101Scraper implements Runnable {
 
     private final A101DataRepository a101DataRepository;
-    private final CountDownLatch latch;
+    private final CountDownLatch latch; // CountDownLatch sinifi, bir thread grubunun diger threadlerin tamamlanmasini beklemesini saglar.
 
-    @Autowired
-    public A101Scraper(A101DataRepository a101DataRepository, CountDownLatch latch) {
+    @Autowired // Spring tarafindan otomatik olarak bean olusturulmasi icin kullanilir. Beanler Spring Container tarafindan yonetilir.
+    public A101Scraper(A101DataRepository a101DataRepository, CountDownLatch latch) { // A101Scraper sinifi icin latch threadlarin tamamlanmasini beklemek icin kullanilir.
         this.a101DataRepository = a101DataRepository;
         this.latch = latch;
     }
@@ -33,8 +33,8 @@ public class A101Scraper implements Runnable {
 
     @Override
     public void run() {
-        WebDriverManager.chromedriver().setup();
-        WebDriver driver = new ChromeDriver();
+        WebDriverManager.chromedriver().setup(); //Gerekli olan WebDriver suruculerini otomatik olarak yukler.
+        WebDriver driver = new ChromeDriver(); //ChromeDriver nesnesi olusturuldu.
 
         try {
             driver.get(baseUrl);
@@ -83,7 +83,7 @@ public class A101Scraper implements Runnable {
 
                     String productId = productName.toLowerCase().replaceAll("\\s+", "-");
 
-                    Optional<A101Product> existingProductOpt = a101DataRepository.findById(productId);
+                    Optional<A101Product> existingProductOpt = a101DataRepository.findById(productId); // Urunun daha once kaydedilip kaydedilmedigini kontrol eder.
                     if (existingProductOpt.isPresent()) {
                         A101Product existingProduct = existingProductOpt.get();
                         existingProduct.setPrice(price);

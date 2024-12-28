@@ -2,7 +2,8 @@ package com.example.demo;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "sok")
+@Document(collection = "sok")//MongoDB veritabanında saklanacak olan verilerin belirtildiği collection adıdır.
+
 public class SokProduct {
 
     private String id;

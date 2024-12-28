@@ -26,11 +26,11 @@ public class SokScraper implements Runnable {
     public SokScraper(SokDataRepository sokDataRepository, CountDownLatch latch) {
         this.sokDataRepository = sokDataRepository;
         this.latch = latch;
-    }
+    }//Bu yapıcı metod, SokScraper sınıfı için latch threadlerin tamamlanmasını beklemek için kullanılır ve sokDataRepository nesnesi oluşturulur.
 
     @Override
     public void run() {
-        WebDriverManager.chromedriver().setup();
+        WebDriverManager.chromedriver().setup();// Gerekli olan WebDriver suruculerini otomatik olarak yukler.
         WebDriver driver = new ChromeDriver();
         try {
             driver.get(baseUrl);
@@ -61,19 +61,17 @@ public class SokScraper implements Runnable {
 
                 while (hasNextPage) {
                     String fullUrl = href + "?page=" + page;
-                    driver.get(fullUrl);
+                    driver.get(fullUrl);// Verilen URL'ye gitmek icin kullanilir.
                     Thread.sleep(2000);
 
-                    List<WebElement> products = driver.findElements(By.cssSelector(".CProductCard-module_infoContainer__F8uxY"));
+                    List<WebElement> products = driver.findElements(By.cssSelector(".CProductCard-module_infoContainer__F8uxY"));// Urunlerin bulundugu elementlerin listesini alir.
                     if (products.isEmpty()) {
                         hasNextPage = false;
                     } else {
                         for (WebElement product : products) {
                             WebElement titleElement = product.findElement(By.cssSelector(".CProductCard-module_title__u8bMW"));
                             String productName = titleElement.getText();
-
                             String productId = productName.toLowerCase().replaceAll("\\s+", "-");
-
                             WebElement priceElement;
                             String price;
                             boolean discount = false;
@@ -88,7 +86,7 @@ public class SokScraper implements Runnable {
                                 price = "Price not found";
                             }
 
-                            Optional<SokProduct> existingProductOpt = sokDataRepository.findById(productId);
+                            Optional<SokProduct> existingProductOpt = sokDataRepository.findById(productId);// Urunun daha once kaydedilip kaydedilmedigini kontrol eder.
                             if (existingProductOpt.isPresent()) {
                                 SokProduct existingProduct = existingProductOpt.get();
                                 existingProduct.setPrice(price);
